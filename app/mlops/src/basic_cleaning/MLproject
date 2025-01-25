@@ -1,0 +1,58 @@
+name: basic_cleaning
+python_env: python_env.yml
+
+entry_points:
+  main:
+    parameters:
+
+      input_artifact:
+        description: Fully-qualified name for the input artifact
+        type: string
+
+      output_artifact_train:
+        description: Name for the output artifact for the training set
+        type: string
+
+      output_type_train:
+        description: Type for the artifact for the training set
+        type: string
+
+      output_artifact_test:
+        description: Name for the output artifact for the test set
+        type: string
+      
+      output_type_test:
+        description: Type for the artifact for the test set
+        type: string
+
+      output_description:
+        description: Description for the artifact
+        type: string
+
+      min_age:
+        description: Minimum accepted age
+        type: integer
+
+      max_age:
+        description: Maximum accepted age
+        type: integer
+
+      min_tenure:
+        description: Minimum accepted tenure
+        type: integer
+      
+      max_tenure:
+        description: Maximum accepted tenure
+        type: integer
+
+    command: >-
+        python run.py --input_artifact {input_artifact} \
+                      --output_artifact_train {output_artifact_train} \
+                      --output_type_train {output_type_train} \
+                      --output_artifact_test {output_artifact_test} \
+                      --output_type_test {output_type_test} \
+                      --output_description {output_description}  \
+                      --min_age {min_age}  \
+                      --max_age {max_age}  \
+                      --min_tenure {min_tenure}  \
+                      --max_tenure {max_tenure}

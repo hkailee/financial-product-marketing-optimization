@@ -1,0 +1,36 @@
+name: data_check
+python_env: python_env.yml
+
+entry_points:
+  main:
+    parameters:
+
+      csv:
+        description: Input CSV file to be tested
+        type: string
+
+      ref:
+        description: Reference CSV file to compare the new csv to
+        type: string
+
+      kl_threshold:
+        description: Threshold for the KL divergence test on the neighborhood group column
+        type: float
+
+      min_age:
+        description: Minimum accepted age
+        type: integer
+
+      max_age:
+        description: Maximum accepted age
+        type: integer
+
+      min_tenure:
+        description: Minimum accepted tenure
+        type: integer
+      
+      max_tenure:
+        description: Maximum accepted tenure
+        type: integer
+
+    command: "pytest . -vv --csv {csv} --ref {ref} --kl_threshold {kl_threshold} --min_age {min_age} --max_age {max_age} --min_tenure {min_tenure} --max_tenure {max_tenure}"

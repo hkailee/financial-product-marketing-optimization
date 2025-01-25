@@ -1,0 +1,59 @@
+name: train_random_forest_propensity
+python_env: python_env.yml
+
+entry_points:
+  main:
+    parameters:
+
+      trainval_artifact:
+        description: Train dataset
+        type: string
+
+      val_size:
+        description: Size of the validation split. Fraction of the dataset, or number of items
+        type: string
+
+      ls_output_columns:
+        description: List of columns to use as output
+        type: string
+        default: None
+
+      product:
+        description: product to train
+        type: string
+        default: None
+
+      random_seed:
+        description: Seed for the random number generator. Use this for reproducibility
+        type: string
+        default: 42
+
+      stratify_by:
+        description: Column to use for stratification (if any)
+        type: string
+        default: 'none'
+
+      n_folds:
+        description: Number of folds for cross-validation
+        type: string
+        default: 5
+
+      rf_config:
+        description: Random forest configuration. A path to a JSON file with the configuration that will
+                     be passed to the scikit-learn constructor for RandomForestRegressor.
+        type: string
+
+      output_artifact:
+        description: Name for the output artifact
+        type: string
+
+    command: >-
+      python run.py --trainval_artifact {trainval_artifact} \
+                    --val_size {val_size} \
+                    --ls_output_columns {ls_output_columns} \
+                    --product {product} \
+                    --random_seed {random_seed} \
+                    --stratify_by {stratify_by} \
+                    --n_folds {n_folds} \
+                    --rf_config {rf_config} \
+                    --output_artifact {output_artifact}

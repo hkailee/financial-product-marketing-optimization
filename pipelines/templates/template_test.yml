@@ -1,0 +1,56 @@
+parameters:
+  - name: projectName
+    type: string
+  - name: packageName
+    type: string
+  - name: workingDirectory
+    type: string
+
+jobs:
+  - job: Build
+    timeoutInMinutes: 120
+    pool:
+      vmImage: "ubuntu-latest"
+    variables:
+      PYTHON_VERSION: 3.9
+      POETRY_VERSION: 1.4.2
+      
+
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: ${{ variables.PYTHON_VERSION }}
+    - checkout: self
+      fetchDepth: 1
+      displayName: "Checkout repo"
+    - script: pip install poetry==${{ variables.POETRY_VERSION }} pytest-azurepipelines
+      displayName: "Install pipeline dependencies"
+    - script: poetry install
+      displayName: "Setup environment using Poetry"
+      workingDirectory: ${{ parameters.workingDirectory }}
+    - script: make lint-check
+      displayName: "Lint check using Ruff"
+      workingDirectory: ${{ parameters.workingDirectory }}
+    - script: make format-check
+      displayName: "Format check using Black"
+      workingDirectory: ${{ parameters.workingDirectory }}
+    - script: make statictypes-check
+      displayName: "Static types check using Pyright"
+      workingDirectory: ${{ parameters.workingDirectory }}
+    - script: |
+        poetry run pytest --junitxml=results.xml  --cov=${{ parameters.packageName }} --cov-report xml
+      displayName: "Execute unit tests using Pytest"
+      workingDirectory: ${{ parameters.workingDirectory }}
+    - task: PublishTestResults@2
+      displayName: "upload Test Results"
+      condition: succeededOrFailed()
+      inputs:
+        testResultsFormat: "JUnit"
+        testResultsFiles: "$(System.DefaultWorkingDirectory)/${{ parameters.workingDirectory }}/results.xml"
+        testRunTitle: "${{ parameters.projectName }} | $(Build.SourceVersionMessage)/$(Build.BuildId)"
+    - task: PublishCodeCoverageResults@1
+      displayName: "Upload code coverage Results"
+      inputs:
+        codeCoverageTool: 'Cobertura'
+        summaryFileLocation: "$(System.DefaultWorkingDirectory)/${{ parameters.workingDirectory }}/coverage.xml"
+        pathToSources: $(System.DefaultWorkingDirectory)/${{ parameters.workingDirectory }}/src/

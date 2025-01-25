@@ -1,0 +1,38 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+hydra-core = "==1.3.2"
+pydantic = "==1.10.0"
+pyyaml = "==6.0.1"
+pip = "==24.0.0"
+mlflow = "==2.13.0"
+wandb = "*"
+cookiecutter = "==2.6.0"
+virtualenv = "*"
+scikit-learn = "*"
+docker = "*"
+ipywidgets = "*"
+pandas = "*"
+ydata-profiling = "*"
+ipykernel = "*"
+jupyter = "*"
+
+[dev-packages]
+pytest = "==8.0.0"
+pytest-cov = "==4.1.0"
+pytest-mock = "==3.10.0"
+requests-mock = "==1.10.0"
+black = "==23.3.0"
+ruff = "==0.0.263"
+mypy = "==1.2.0"
+nbconvert = "==7.3.1"
+jupyter = "*"
+ipykernel = "*"
+ultralytics = "==8.2.31"
+comet-ml = "==3.43.0"
+
+[requires]
+python_version = "3.9"

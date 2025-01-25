@@ -1,0 +1,16 @@
+# Python version required to run the project.
+python: "3.9.17"
+# Dependencies required to build packages. This field is optional.
+build_dependencies:
+  - pip==23.3.1
+  - setuptools
+  - wheel==0.37.1
+  - matplotlib==3.8.2
+  - scikit-learn==1.2.2
+  - numpy==1.23.2
+  - pandas==1.5.3
+# Dependencies required to run the project.
+dependencies:
+  - mlflow==2.8.1
+  - wandb==0.16.0
+  - git+https://github.com/udacity/nd0821-c2-build-model-workflow-starter.git#egg=wandb-utils&subdirectory=components

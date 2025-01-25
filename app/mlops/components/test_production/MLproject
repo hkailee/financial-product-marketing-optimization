@@ -1,0 +1,43 @@
+name: test_model
+python_env: python_env.yml
+
+entry_points:
+  main:
+    parameters:
+
+      model_propensity_cc:
+        description: An MLflow serialized model
+        type: string
+      
+      model_propensity_cl:
+        description: An MLflow serialized model
+        type: string
+      
+      model_propensity_mf:
+        description: An MLflow serialized model
+        type: string
+
+      model_revenue_cc:
+        description: An MLflow serialized model
+        type: string
+      
+      model_revenue_cl:
+        description: An MLflow serialized model
+        type: string
+
+      model_revenue_mf:
+        description: An MLflow serialized model
+        type: string
+      
+      test_dataset:
+        description: The test artifact
+        type: string
+
+    command: >-
+      python run.py --model_propensity_cc {model_propensity_cc} \
+                    --model_propensity_cl {model_propensity_cl} \
+                    --model_propensity_mf {model_propensity_mf} \
+                    --model_revenue_cc {model_revenue_cc} \
+                    --model_revenue_cl {model_revenue_cl} \
+                    --model_revenue_mf {model_revenue_mf} \
+                    --test_dataset {test_dataset}

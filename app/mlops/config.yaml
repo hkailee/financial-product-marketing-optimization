@@ -1,0 +1,81 @@
+main:
+  # Set this to null if you are running in prod
+  project_name: financial-product-marketing-optimization
+  experiment_name: development
+  steps: all
+etl:
+  sample: "DataScientist_CaseStudy_Dataset.xlsx"
+  min_age: 0
+  max_age: 110
+  min_tenure: 0
+  max_tenure: 1320
+data_check:
+  csv_to_check: "clean_sample_test.csv"
+  kl_threshold: 0.2
+modeling:
+  # All outcomes/output columns (import to list all so that the model doesn't use this as feature for training)
+  ls_output_columns:
+  - Sale_MF
+  - Sale_CC
+  - Sale_CL
+  - Revenue_MF
+  - Revenue_CC
+  - Revenue_CL
+  # Columns to use for the propensity model
+  product_to_train: "Revenue_CL"
+  # Fraction of data to use for test (the remaining will be used for train and validation)
+  test_size: 0.2
+  # Fraction of remaining data to use for validation
+  val_size: 0.2
+  # Fix this for reproducibility, change to have new splits
+  random_seed: 42
+  # Column to use for stratification (use "none" for no stratification)
+  stratify_by: "Sex"
+  # Number of folds for cross-validation
+  n_folds: 5
+  # NOTE: you can put here any parameter that is accepted by the constructor of
+  # RandomForestClassifer as the propensity model for all 3 product classes. 
+  # This is a subsample, but more could be added:
+  random_forest_classifier_propensity:
+    n_estimators: 100
+    max_depth: 15
+    min_samples_split: 4
+    min_samples_leaf: 3
+    # Here -1 means all available cores
+    n_jobs: -1
+    criterion: "gini"
+    max_features: 10
+    # DO not change the following
+    oob_score: true
+  # This is a subsample, but more could be added:
+  random_forest_regression_revenue:
+    n_estimators: 100
+    max_depth: 15
+    min_samples_split: 4
+    min_samples_leaf: 3
+    # Here -1 means all available cores
+    n_jobs: -1
+    criterion: "squared_error"
+    max_features: 25
+    # DO not change the following
+    oob_score: true
+  lasso_regression_revenue:
+    alpha: 1.0
+    max_iter: 1000
+  multiple_regression_revenue:
+    # DO not change the following
+    fit_intercept: true
+best_model_propensity:
+  propensity_cl: "random_forest_export_Sale_CL:prod"
+  propensity_cc: "random_forest_export_Sale_CC:prod"
+  propensity_mf: "random_forest_export_Sale_MF:prod"
+best_model_revenue:
+  revenue_cl: "random_forest_export_Revenue_CL:prod"
+  revenue_cc: "random_forest_export_Revenue_CC:prod"
+  revenue_mf: "random_forest_export_Revenue_MF:prod"
+production:
+  test_csv: "clean_sample_test.csv"
+
+
+
+
