@@ -107,6 +107,9 @@ def go(args):
     df_to_offer = df_to_offer.sort_values(by="expected_revenue", ascending=False)
     df_to_offer = df_to_offer.head(150)
 
+    # reverse the log transformation for expected revenue
+    df_to_offer["expected_revenue_reverseLog"] = np.expm1(df_to_offer["expected_revenue"])
+
     # save the result to a new artifact
     filename = "clients_to_offer.csv"
     df_to_offer.to_csv(filename, index=True)

@@ -179,10 +179,27 @@ def go(args):
     }, index=X_test.index)
 
     # calculate expected revenue
-    df_result["expected_revenue_cc"] = df_result[f"y_pred_prop_cc_{sk_pipe_prop_cc.classes_[1]}"] * df_result["y_pred_revenue_cc"]
-    df_result["expected_revenue_cl"] = df_result[f"y_pred_prop_cl_{sk_pipe_prop_cl.classes_[1]}"] * df_result["y_pred_revenue_cl"]
-    df_result["expected_revenue_mf"] = df_result[f"y_pred_prop_mf_{sk_pipe_prop_mf.classes_[1]}"] * df_result["y_pred_revenue_mf"]
+    df_result["expected_revenue_cc"] = df_result[f"y_pred_prop_cc_{sk_pipe_prop_cc.classes_[1]}"] * df_result["y_pred_revenue_cc"] * df_result["y_pred_sale_cc"]
+    df_result["expected_revenue_cl"] = df_result[f"y_pred_prop_cl_{sk_pipe_prop_cl.classes_[1]}"] * df_result["y_pred_revenue_cl"] * df_result["y_pred_sale_cl"]
+    df_result["expected_revenue_mf"] = df_result[f"y_pred_prop_mf_{sk_pipe_prop_mf.classes_[1]}"] * df_result["y_pred_revenue_mf"] * df_result["y_pred_sale_mf"]
 
+    # select the top clients to offer
+    df_to_offer = df_result[["expected_revenue_cc", "expected_revenue_cl", "expected_revenue_mf"]]
+    df_to_offer["product_to_offer"] = df_to_offer.idxmax(axis=1).str.replace("expected_revenue_", "")
+    df_to_offer["expected_revenue"] = df_to_offer.max(axis=1)
+    df_to_offer = df_to_offer.sort_values(by="expected_revenue", ascending=False)
+    
+    ls_groundtruth = ['y_test_revenue_cc', 'y_test_revenue_cl', 'y_test_revenue_mf']
+    df_to_offer = pd.merge(df_to_offer, 
+                           df_result[ls_groundtruth], 
+                           left_index=True, right_index=True)
+    df_to_offer["product_to_offer_groundtruth"] = df_to_offer[ls_groundtruth].idxmax(axis=1).str.replace("y_test_revenue_", "")
+    df_to_offer['revenue_groundtruth'] = df_to_offer[ls_groundtruth].max(axis=1)
+
+    # reverse the log transformation for expected revenue
+    df_to_offer["expected_revenue_reverseLog"] = np.expm1(df_to_offer["expected_revenue"])
+
+    # plot
     gs = gridspec.GridSpec(2, 3)
     fig = plt.figure(figsize=(10, 8))
     ax = fig.add_subplot(gs[0])
@@ -226,6 +243,25 @@ def go(args):
     os.remove(filename)
 
 
+    # save the result to a new artifact
+    filename = "clients_to_offer_test_dataset.csv"
+    df_to_offer.to_csv(filename, index=True)
+
+    logger.info("Uploading clients to offer")
+    artifact = wandb.Artifact(
+        "clients_to_offer_test_dataset",
+        type="clients_to_offer_test_dataset",
+        description="Clients to offer for test dataset",
+    )
+    artifact.add_file(filename)
+
+    logger.info("Logging artifact")
+    run.log_artifact(artifact)
+
+    logger.info("Cleaning up")
+    os.remove(filename)
+
+
 def plot_confusion_matrix(pipe, X, y, ax):
     """
     Plot the confusion matrix
@@ -253,11 +289,10 @@ def plot_predicted_vs_actual(pipe, X_val, y_val, ax):
     ax.set_ylabel('Predicted')
     ax.set_title('Predicted vs Actual')
     ax.title.set_fontsize(6) 
-    return ax
 
     # include the R2 and MAE scores in the plot
-    ax.text(0.05, 0.95, f"R2: {r2_score(y_val, y_pred):.2f}", transform=ax.transAxes)
-    ax.text(0.05, 0.90, f"MAE: {mean_absolute_error(y_val, y_pred):.2f}", transform=ax.transAxes)
+    ax.text(0.05, 0.95, f"R2: {r2_score(y_val, y_pred):.2f}", transform=ax.transAxes, fontsize=16)
+    ax.text(0.05, 0.90, f"MAE: {mean_absolute_error(y_val, y_pred):.2f}", transform=ax.transAxes, fontsize=16)
 
     return ax
 
