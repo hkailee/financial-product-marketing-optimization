@@ -91,7 +91,7 @@ the configuration file. It can be accessed from the `go` function as
 NOTE: do NOT hardcode any parameter when writing the pipeline. All the parameters should be
 accessed from the configuration file.
 
-NOTE: Please put the DataScientist_CaseStudy_Dataset.xlsx at app/mlops/components/get_data/data before
+NOTE: Make sure the dataset file DataScientist_CaseStudy_Dataset.xlsx is located at app/mlops/components/get_data/data before
 start running the pipeline.
 
 ### Running the entire pipeline or just a selection of steps

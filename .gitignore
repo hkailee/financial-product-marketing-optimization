@@ -185,6 +185,7 @@ $RECYCLE.BIN/
 ### Additional Gitignore Stuff:
 data/*
 **/data/*
+!**/data/DataScientist_CaseStudy_Dataset.xlsx
 **/local/*
 **/mlruns/*
 **/mlruns
