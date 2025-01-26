@@ -148,7 +148,7 @@ modeling -> product_to_train to Sale_MF and modeling-> stratify_by to Sale_MF:
 ```bash
 > mlflow run . \
   -P steps=train_random_forest_propensity \
-  -P hydra_options="modeling.product_to_train=Sale_MF modeling.stratify_by=Sale_MF"
+  -P hydra_options="modeling.product_to_train='Sale_MF' modeling.stratify_by='Sale_MF'"
 ```
 
 ### Test the model perfomance on the test samples
@@ -168,7 +168,12 @@ First define the necessary parameters at the config.yaml at production.test_csv 
 > pipenv shell
 > mlflow run . \
   -P steps=test_production \
-  -P hydra_options="production.test_csv=clean_sample_test.csv"
+  -P hydra_options="production.test_csv='clean_sample_test.csv'"
+# OR you can run the following to test the production samples
+> mlflow run https://github.com/hkailee/financial-product-marketing-optimization.git \
+             -v v1.0.0 \
+              -P steps=test_production \
+             -P hydra_options="production.test_csv='clean_sample_test.csv'"
 ```
 
 ## Wandb public workspace URL for this project
