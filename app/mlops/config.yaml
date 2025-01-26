@@ -10,7 +10,7 @@ etl:
   min_tenure: 0
   max_tenure: 1320
 data_check:
-  csv_to_check: "clean_sample_test.csv"
+  csv_to_check: "clean_sample.csv"
   kl_threshold: 0.2
 modeling:
   # All outcomes/output columns (import to list all so that the model doesn't use this as feature for training)
@@ -22,7 +22,7 @@ modeling:
   - Revenue_CC
   - Revenue_CL
   # Columns to use for the propensity model
-  product_to_train: "Revenue_CL"
+  product_to_train: "Sale_MF"
   # Fraction of data to use for test (the remaining will be used for train and validation)
   test_size: 0.2
   # Fraction of remaining data to use for validation
