@@ -67,7 +67,7 @@ This will create a step called `basic_cleaning` under the directory `src` with t
 python_env.yml  MLproject  run.py
 ```
 
-You can now modify the script (`run.py`), the conda environment (`conda.yml`) and the project definition
+You can now modify the script (`run.py`), the virtualenv environment (`python_env.yml`) and the project definition
 (`MLproject`) as you please.
 
 The script `run.py` will receive the input parameters `parameter1`, `parameter2`,
