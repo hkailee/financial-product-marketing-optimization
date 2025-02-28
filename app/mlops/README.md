@@ -1,4 +1,4 @@
-# Build an ML Pipeline for OSCAR object identification
+# Build an ML Pipeline financial product marketing optimization
 
 ## Table of contents
 
